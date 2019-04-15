@@ -1,0 +1,533 @@
+.data
+#===========================================Author Name=======================================================
+MyName:
+	.ascii "Name: Hoat Vu\nCSC 35\n\n\0"
+
+
+
+#===========================================Welcome Message==================================================
+WelcomeMessage:
+	.ascii "Welcome to the battle of Towers\nThe game has the maximum capacity of 10 towers\n\0"
+
+
+#===========================================Game Label=======================================================
+Art1:
+	.ascii "============WINNER============\0"
+Art2:
+	.ascii "\n==============================\0"
+NumberPlayerPrompt:
+	.ascii "How many players? \0"
+
+PlayerLabel:
+	.ascii "\n\nTOWER \0"
+
+HealthLabel:
+	.ascii "\nHealth: \0"
+
+TargetLabel:
+	.ascii "\nYour Target: \0"
+
+SpellLabel:
+	.ascii "\nSpell blasts them for \0"
+
+PointLabel:
+	.ascii " points\n\n\0"
+
+ChoiceLabel:
+	.ascii "Your choice: \0"
+
+Winner:
+	.ascii "\n\n\nThe winner is PLAYER \0"
+
+#===========================================Class Label====================================================
+ClassLabel:
+	.ascii "\nClass: \0"
+Physical:
+	.ascii "Arrow Tower\n\0"
+Magical:
+	.ascii "Magic Tower\n\0"
+Cannon:	
+	.ascii "Cannon Tower\n\0"
+
+
+ClassTable:
+	.quad Cannon
+	.quad Physical
+	.quad Magical
+
+Counter:
+	.quad 0 
+
+Value:
+	.quad 1
+	.quad 0
+	.quad 2
+	.quad 1
+	.quad 2
+	.quad 1
+	.quad 0
+	.quad 2
+	.quad 1
+	.quad 0
+
+Class:
+	.quad 0
+
+#============================================Skill Label====================================================
+ArrowBarrage:
+	.ascii "1. Arrow Barrage\n\0"
+EvasiveSalvo:
+	.ascii "2. Evasive Salvo\n\0"
+RapidShot:
+	.ascii "3. Rapid Shot\n\0"
+
+ArcaneBlast:
+	.ascii "1. Arcane Blast\n\0"
+Thunderbolt:
+	.ascii "2. Thunderbolt\n\0"
+Claw:
+	.ascii "3. Claw Attack\n\0"
+MonkeyPush:
+	.ascii "1. Monkey Push\n\0"
+CannonBlaster:
+	.ascii "2. Cannon Blaster\n\0"
+CannonStrike:
+	.ascii "3. Cannon Strike\n\0"
+
+
+#===========================================Table Skill====================================================
+ArrowTable:
+	.quad ArrowBarrage
+	.quad EvasiveSalvo
+	.quad RapidShot
+
+WizzardTowerTable:
+	.quad ArcaneBlast
+	.quad Thunderbolt
+	.quad Claw
+Choice:
+	.quad 0
+
+WizzardTable:
+	.quad 0
+	.quad 10
+	.quad 20
+	.quad 30
+
+ArcherTable:
+	.quad 0
+	.quad 9
+	.quad 23
+	.quad 28
+
+CannonTable:
+	.quad 0
+	.quad 7
+	.quad 26
+	.quad 31
+
+
+#===============================================Other======================================================
+PreviousAlive:
+	.quad 0
+
+CurrentPlayer:
+	.quad 0
+
+Target:
+	.quad 0
+
+Temp1: 	
+	.quad 0
+
+Temp2:
+	.quad 0
+
+SurvivedPlayer:
+	.quad 0
+
+NumberPlayer:
+	.quad 0
+
+PlayerHealth:
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+	.quad 100
+
+TempHealth:
+	.quad 0
+
+
+.text
+.global _start
+
+
+_start:
+	mov $MyName, %rcx						#First, set the author name to the program and print it out
+	call PrintCString
+
+	mov $WelcomeMessage, %rcx					#set a welcome message and the capacity of the games, and print it out
+	call PrintCString
+
+	mov $NumberPlayerPrompt, %rcx					#prompt users to enter totally how many player play the game
+	call PrintCString
+	
+	call ScanInt 							#scan the user input
+
+	mov %rcx, PreviousAlive						#store the number of alive player 
+	sub $1, %rcx							
+	mov %rcx, NumberPlayer						# User number player as a condition to calculate the total number of players
+
+
+	
+GameStart:	
+	mov PreviousAlive, %rax						# store the alive player into rax 
+	cmp $2, %rax							# compare it with 2 to see that
+	jl DisplayResult						# if there is less than 2 two people, the game will jump to display the result
+	
+#==============================================================================================
+#This part is accessing the player health in order to find out that the player is dead or alive
+#If alive continue, other jump to another player that increase the current position by 1
+#==============================================================================================
+	mov CurrentPlayer, %rdi					
+	mov PlayerHealth(,%rdi,8), %rax 
+	cmp $1, %rax 
+	jl NextPlayer
+
+#==============================================================================================
+#The survive players are manually count every single cycle. If the above condition is satisfied
+#The survivedplayer will increase by 1
+#==============================================================================================
+	mov SurvivedPlayer, %rcx
+	add $1, %rcx
+	mov %rcx, SurvivedPlayer
+
+	mov $3, %rcx
+	call SetForeColor						#The color is set to yellow for the Tower label
+	mov $PlayerLabel, %rcx
+	call PrintCString
+	
+	mov CurrentPlayer, %rcx						#print the number of current player
+	call PrintInt
+	mov $7, %rcx							#Set the color back to white
+	call SetForeColor
+
+	mov $HealthLabel, %rcx						#print out the player health label
+	call PrintCString
+	
+	mov $2, %rcx							#Set the health to green
+	call SetForeColor
+	mov PlayerHealth(,%rdi, 8), %rcx				#Print out the player health number
+	call PrintInt
+	mov $7, %rcx							#Set color back to white
+	call SetForeColor
+			
+#========================================================================================================
+#This is use to print out which class of each tower. This code will access a table of value where it will 
+#attract the information about decide whether the tower is magic, physic, or cannon
+#========================================================================================================
+	mov $ClassLabel, %rcx						#
+	call PrintCString
+	mov Value(,%rdi, 8), %rax
+	cmp $1, %rax
+	je PhysicalLabel
+	jl CannonLabel
+	jmp MagicalLabel
+
+#=============================================================================================================
+#This is where the program print out the Target and prompt player to enter the target that they want to attack
+#Depend on the Class, they will have different type of skills. There is a table create name Value. This table
+#has a default value to determine which type of class the tower is. The code below will vary 3 number 0 1 2. 
+#1 will be physical, 0 will be cannon, and 2 will be wizzard. The comparison would tell the program where to 
+#jump and to print out the represent information of that class.
+#=============================================================================================================
+
+BackToMain:
+	mov $TargetLabel, %rcx
+	call PrintCString
+	call ScanInt
+	mov %rcx, Target 
+	mov Value(,%rdi, 8), %rax
+	cmp $1, %rax
+	je PhysicalClass
+	jl CannonClass
+	jmp MagicalClass
+#==========================================================================================================
+#This code is to call subroutine Attack target, every single alive tower will call this subroutine in order 
+#to damage their enemies.
+#==========================================================================================================
+AttackTower:
+
+	call AttackTarget
+
+#=========================================================================================================
+#The code below is to decide whether the game has come to the end of a cycle or not. If it has come to an
+#end of the cycle, that means the when the position Tower is the numberplayer - 1. It will jump to a rest
+#where the turn will return to first tower. Otherwise, it will just add up to the next player .
+#=========================================================================================================
+NextPlayer:
+	mov CurrentPlayer, %rax 
+	cmp NumberPlayer, %rax 
+	je PlayerReset
+
+	mov $1, %rcx
+	add CurrentPlayer, %rcx 
+	mov %rcx, CurrentPlayer
+	jmp GameStart
+
+#=================================================================================================================
+#PreviousAlive and SurvivedPlayer are two different type of variable, but it has the same meaning. One will change 
+#every single next player. And one will change only when one of the player is dead. For every cycle, the program
+#will check if the SurvivedPlayer is the same with the PreviousAlive, so no one die. If the SurvivedPlayer is less
+#than PreviousAlive, subtract the PreviousAlive with the current survive, that way we know how many people died 
+#during the game. Then we store the new value which will be the current alive player.
+#=================================================================================================================
+PlayerReset:
+	mov PreviousAlive, %rcx
+	sub SurvivedPlayer, %rcx
+	mov %rcx, Temp2
+	mov PreviousAlive, %rcx
+	sub Temp2, %rcx
+	mov %rcx, PreviousAlive
+
+	mov $0, %rcx
+	mov %rcx, CurrentPlayer
+	mov %rcx, SurvivedPlayer
+	jmp GameStart
+
+
+#Print out the type class of the tower
+#========================================
+PhysicalLabel:
+	mov $Physical, %rcx
+	call PrintCString
+	jmp BackToMain
+
+MagicalLabel:
+	mov $Magical, %rcx
+	call PrintCString
+	jmp BackToMain
+
+CannonLabel:
+	mov $Cannon, %rcx
+	call PrintCString
+	jmp BackToMain
+
+#====================================================================================================
+#the code below would use to verified that the currentplayer not attacking itself
+#The code will determine the target and access the target HP in the health table. 
+#The program will then determine the current player tower class. Depend on the class
+#it will have a different type of skills and different damage.
+#====================================================================================================
+AttackTarget:
+	mov Target, %rax
+	cmp CurrentPlayer, %rax
+	je NextPlayer
+
+	mov Target, %rdi
+	mov PlayerHealth(,%rdi,8), %rcx
+	
+	mov CurrentPlayer, %rdi
+	mov Value(, %rdi, 8), %rax
+	cmp $1, %rax
+
+	je ArrowTableSkill
+	jl CannonTableSkill
+	jmp WizzardTableSkill
+
+#Store the health back to the enemies then return to main
+#===========================================================
+ContinueAttack:
+	mov Target, %rdi
+	mov TempHealth, %rcx
+	mov %rcx, PlayerHealth(,%rdi,8)
+
+	ret
+
+#=====================================================================================================
+#If the current player is arrow tower, then it will use the skill of arrow table to attack the enemies
+#Program then jump back to main to continue the Attack process
+#=====================================================================================================
+ArrowTableSkill:
+	mov Choice, %rdi
+	sub ArcherTable(,%rdi,8), %rcx
+
+	mov %rcx, TempHealth
+	mov $SpellLabel, %rcx
+	call PrintCString
+
+	mov $1, %rcx
+	call SetForeColor
+	mov ArcherTable(,%rdi, 8), %rcx
+	call PrintInt
+	mov $7, %rcx
+	call SetForeColor
+
+	mov $PointLabel, %rcx
+	call PrintCString
+
+	jmp ContinueAttack
+
+#==============================================================================================================
+#If the current player is cannon tower, the it will use the skill of cannon table to attack the enimies
+#program then jump back to main to continue the attack process
+#==============================================================================================================
+CannonTableSkill:
+	mov Choice, %rdi
+	sub CannonTable(,%rdi,8), %rcx
+	
+	mov %rcx, TempHealth
+	mov $SpellLabel, %rcx
+	call PrintCString
+	
+	mov $1, %rcx
+	call SetForeColor
+	mov CannonTable(,%rdi, 8), %rcx
+	call PrintInt
+	mov $7, %rcx
+	call SetForeColor
+
+	mov $PointLabel, %rcx
+	call PrintCString
+
+	jmp ContinueAttack
+
+#================================================================================================================
+#if the current player is wizzard tower, then it will use the skill damage of wizzard table to attack the enemies
+#program then jump back to main to continue their attack.
+#================================================================================================================
+WizzardTableSkill:
+	mov Choice, %rdi
+	sub WizzardTable(,%rdi, 8), %rcx
+
+	mov %rcx, TempHealth
+	mov $SpellLabel, %rcx
+	call PrintCString
+	
+	mov $1, %rcx
+	call SetForeColor
+	mov WizzardTable(,%rdi,8), %rcx
+	call PrintInt
+	mov $7, %rcx
+	call SetForeColor
+
+	mov $PointLabel, %rcx
+	call PrintCString
+
+	jmp ContinueAttack
+
+#================================================================================================================
+#The program will print out which type of skills that the player want to use. Since there are three tower classes
+#Each tower class will have specific skills, the below code will also prompt player to enter which skill they want
+#to use. Then it jump back to Attack Tower. The algorithm is the same for the cannon and wizzard classes.
+#================================================================================================================
+PhysicalClass:
+	mov $ArrowBarrage, %rcx
+	call PrintCString
+	mov $EvasiveSalvo, %rcx
+	call PrintCString
+	mov $RapidShot, %rcx
+	call PrintCString
+
+	mov $ChoiceLabel, %rcx
+	call PrintCString
+	call ScanInt
+	mov %rcx, Choice 
+	
+	jmp AttackTower		
+
+CannonClass:
+	mov $MonkeyPush, %rcx
+	call PrintCString
+	mov $CannonBlaster, %rcx
+	call PrintCString
+	mov $CannonStrike, %rcx
+	call PrintCString
+
+	mov $ChoiceLabel, %rcx
+	call PrintCString
+	call ScanInt
+	mov %rcx, Choice
+
+	jmp AttackTower
+
+MagicalClass:
+	mov $ArcaneBlast, %rcx
+	call PrintCString
+	mov $Thunderbolt, %rcx
+	call PrintCString
+	mov $Claw, %rcx
+	call PrintCString
+
+	mov $ChoiceLabel, %rcx
+	call PrintCString
+	call ScanInt
+	mov %rcx, Choice
+	
+	jmp AttackTower
+
+#=====================================================================================================
+#This use to display the result. The program would go into a loop to check every single player health.
+#If the HP is 1 or greater, that player will be the winner and display on the screen with their HP
+#=====================================================================================================
+DisplayResult:
+	mov Counter, %rdi
+	mov PlayerHealth(,%rdi, 8), %rax
+	cmp $1, %rax
+	jge TheWinner
+	mov Counter, %rcx
+	add $1, %rcx
+	mov %rcx, Counter
+	jmp DisplayResult
+	
+TheWinner:
+	mov $6, %rcx
+	call SetForeColor
+
+	mov $Art1, %rcx
+	call PrintCString
+	mov $Art2, %rcx
+	call PrintCString	
+	mov $7, %rcx
+	call SetForeColor
+
+	mov $PlayerLabel, %rcx
+	call PrintCString
+	mov Counter, %rcx
+	call PrintInt
+	
+	mov $HealthLabel, %rcx
+	call PrintCString
+	mov $2, %rcx
+	call SetForeColor
+	mov PlayerHealth(,%rdi,8), %rcx
+	call PrintInt
+	
+	mov $7, %rcx
+	call SetForeColor	
+	mov $ClassLabel, %rcx
+	call PrintCString
+	mov Counter, %rdi
+	mov Value(,%rdi,8), %rcx
+	mov %rcx, %rdi
+	mov ClassTable(,%rdi,8), %rcx
+	call PrintCString
+	
+	mov $6, %rcx
+	call SetForeColor
+	mov $Art2, %rcx
+	call PrintCString
+	mov $7, %rcx
+	call SetForeColor
+
+ 		
+End:
+	call EndProgram
+
