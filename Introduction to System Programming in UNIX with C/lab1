@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	printf("\nLab1 \n\n");
+	printf("Hello World\n");
+	printf("Hi, Hoat Vu \n\n");
+
+	printf("Yesterday is history, tomorrow is mystery, but today is a gift. That's why it called the present.\n\n");
+
+	printf("- Unknown\n\n");
+	return EXIT_SUCCESS;
+}
+/*----------------------------------------------*/
