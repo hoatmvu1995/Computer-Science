@@ -1,0 +1,43 @@
+1.	select loan_no, payment_no, amount, method, status
+	from Payment 
+	where amount < 15.00
+	order by loan_no;
+
+2.	select C.ssn, C.fname, C.lname
+	from Customer as C, Account as A, Owns as O 
+	where C.ssn = O.ssn AND A.acc_no = O.acc_no AND A.balance > 10000
+	group by ssn;
+	
+3.	select C.ssn, C.fname, C.lname
+	from Customer as C, Account as A, Owns as O 
+	where C.ssn = O.ssn AND A.acc_no = O.acc_no 
+	group by ssn 
+	having count(*) < 3;
+	
+4.	select C.ssn, C.fname, C.lname, C.phone
+	from Customer as C, Account as A, Owns as O 
+	where C.ssn = O.ssn AND A.acc_no = O.acc_no AND A.acc_no = '000000001';
+	
+5. 	select P.payment_no, P.due_date
+	from Payment as P, Borrows as B, Loan as L
+	where P.loan_no = L.loan_no AND B.loan_no = L.loan_no AND C.ssn = B.ssn AND C.fname = 'John' AND C.lname = 'Smith';
+	
+6.	select C.ssn, C.fname, C.lname 
+	from Customer as C, Borrows as B 
+	where B.ssn = C.ssn 
+	group by ssn;
+	
+7.	select C.ssn, count(*)
+	from Customer as C, Borrows as B
+	where C.ssn = B.ssn AND C.fname = 'John' AND C.lname = 'Smith';
+	
+8. 	select C.ssn, count(*), sum(balance)
+	from Customer as C, Account as A, Owns as O 
+	where C.ssn = O.ssn AND O.acc_no = A.acc_no
+	group by acc_no
+	having count(*) > 2;
+	
+9. 	select C.ssn, Clname, C.fv_branch, Br.address
+	from Customer as C, Branch as Br
+	where C.fv_branch = Br.name OR C.fv_branch IS NULL;
+	
