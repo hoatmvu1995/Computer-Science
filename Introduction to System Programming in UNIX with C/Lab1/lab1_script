@@ -1,0 +1,20 @@
+Script started on Thu 31 Jan 2019 11:24:18 PM PST
+[vuh@athena:21]> gcc lab1.c
+
+[vuh@athena:22]> a.out
+
+
+Lab1 
+
+Hello World
+Hi, Hoat Vu 
+
+Yesterday is history, tomorrow is mystery, but today is a gift. That's why it called the present.
+
+- Unknown
+
+[vuh@athena:23]> exit
+
+exit
+
+Script done on Thu 31 Jan 2019 11:24:33 PM PST
