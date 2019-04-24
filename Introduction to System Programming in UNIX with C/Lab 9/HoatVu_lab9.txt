@@ -1,0 +1,44 @@
+Script started on Wed 17 Apr 2019 12:27:50 PM PDT
+[vuh@sp3:7]> gcc lab9.c -Wall
+lab9.c: In function ‘main’:
+lab9.c:42: warning: unused variable ‘pid’
+lab9.c:41: warning: unused variable ‘status’
+[vuh@sp3:8]> a.out
+HoatVu_csc60msh> 
+Argc = 0
+HoatVu_csc60msh>  
+Argc = 0
+HoatVu_csc60msh> pwd
+Argc = 1
+Argv 0 = pwd
+/gaia/class/student/vuh/csc60/lab9
+HoatVu_csc60msh> cd ..
+Argc = 2
+Argv 0 = cd
+Argv 1 = ..
+HoatVu_csc60msh> pwd
+Argc = 1
+Argv 0 = pwd
+/gaia/class/student/vuh/csc60
+HoatVu_csc60msh> cd lab9
+Argc = 2
+Argv 0 = cd
+Argv 1 = lab9
+HoatVu_csc60msh> pwd
+Argc = 1
+Argv 0 = pwd
+/gaia/class/student/vuh/csc60/lab9
+HoatVu_csc60msh> cd
+Argc = 1
+Argv 0 = cd
+HoatVu_csc60msh> pwd
+Argc = 1
+Argv 0 = pwd
+/gaia/class/student/vuh
+HoatVu_csc60msh> exit
+Argc = 1
+Argv 0 = exit
+[vuh@sp3:9]> exit
+exit
+
+Script done on Wed 17 Apr 2019 12:30:02 PM PDT
