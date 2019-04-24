@@ -1,0 +1,51 @@
+Script started on Wed 06 Mar 2019 01:01:00 AM PST
+[vuh@sp3:21]> touch lab5.h
+[vuh@sp3:22]> make
+gcc -c lab5.c
+gcc -c class_stats.c
+gcc lab5.o class_stats.o -o grades -lm
+[vuh@sp3:23]> grades
+
+
+Hoat Vu.  Lab 5. 
+
+
+Stats for lab5a.dat:  
+
+   Average grade = 85.000000 
+
+   Grade Distribution:  
+      Category 100 -  0 
+      Category  90 - 14 
+      Category  80 -  8 
+      Category  70 -  6 
+      Category  60 -  0 
+      Category  50 -  0 
+      Category  40 -  1 
+      Category  30 -  0 
+      Category  20 -  0 
+      Category  10 -  0 
+      Category   0 -  0 
+
+
+Stats for lab5b.dat:  
+
+   Average grade = 82.000000 
+
+   Grade Distribution:  
+      Category 100 -  2 
+      Category  90 - 10 
+      Category  80 -  7 
+      Category  70 -  7 
+      Category  60 -  1 
+      Category  50 -  1 
+      Category  40 -  0 
+      Category  30 -  0 
+      Category  20 -  0 
+      Category  10 -  0 
+      Category   0 -  1 
+
+[vuh@sp3:24]> exit
+exit
+
+Script done on Wed 06 Mar 2019 01:01:43 AM PST
