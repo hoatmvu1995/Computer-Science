@@ -1,0 +1,27 @@
+Script started on Sat 16 Feb 2019 11:18:48 PM PST
+[vuh@sp3:21]> gcc lab3.c
+
+[vuh@sp3:22]> a.out
+
+
+
+Hoat Vu. Lab3.
+
+Jane went to the store.
+
+My friend is 22 years old.
+
+"So many books, so little time."
+- Frank Zappa
+
+The average = 246.1
+
+The average = 246.136
+
+The average = 2.46e+02
+
+[vuh@sp3:23]> exit
+
+exit
+
+Script done on Sat 16 Feb 2019 11:19:04 PM PST
