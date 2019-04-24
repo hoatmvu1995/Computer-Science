@@ -1,0 +1,18 @@
+/*-------------------------------------------*/
+/*Hoat Vu                                    */
+/*Lab 3                                      */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+	int age = 22;
+	double average = 246.13579;
+	
+	printf("\n\nHoat Vu. Lab3.\n\nJane went to the store.\n\nMy friend is %i years old.\n\n\"So many books, so little time.\"\n- Frank Zappa\n\n", age);
+	
+	printf("The average = %5.1f\n\nThe average = %7.3f\n\nThe average = %8.2e\n\n", average, average, average);
+	
+	return EXIT_SUCCESS;	
+}
